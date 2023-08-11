@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <conio.h>
+#include <ctime>
 
 enum class Player {
     None,
@@ -72,36 +73,58 @@ public:
 };
 
 int main() {
-    CaroGame game;
-    Player currentPlayer = Player::X;
-    int moves = 0;
+    bool playAgain = true;
 
-    while (!game.isGameOver() && moves < game.getBoardSize() * game.getBoardSize()) {
-        game.drawBoard();
-        std::cout << "Player " << (currentPlayer == Player::X ? 'X' : 'O') << "'s turn." << std::endl;
-        
-        int row, col;
-        while (true) {
-            std::cout << "Enter row (0-2): ";
-            std::cin >> row;
-            std::cout << "Enter column (0-2): ";
-            std::cin >> col;
-            if (game.makeMove(currentPlayer, {row, col})) {
-                break;
+    while (playAgain) {
+        CaroGame game;
+        std::string playerXName, playerOName;
+        Player currentPlayer = Player::X;
+        int moves = 0;
+
+        std::cout << "Enter name for Player X: ";
+        std::cin >> playerXName;
+        std::cout << "Enter name for Player O: ";
+        std::cin >> playerOName;
+
+        std::clock_t startTime = std::clock();
+
+        while (!game.isGameOver() && moves < game.getBoardSize() * game.getBoardSize()) {
+            game.drawBoard();
+            std::cout << "Player " << (currentPlayer == Player::X ? playerXName : playerOName) << "'s turn." << std::endl;
+
+            int row, col;
+            while (true) {
+                std::cout << "Enter row (0-2): ";
+                std::cin >> row;
+                std::cout << "Enter column (0-2): ";
+                std::cin >> col;
+                if (game.makeMove(currentPlayer, {row, col})) {
+                    break;
+                }
+                std::cout << "Invalid move. Try again." << std::endl;
             }
-            std::cout << "Invalid move. Try again." << std::endl;
+
+            currentPlayer = (currentPlayer == Player::X) ? Player::O : Player::X;
+            ++moves;
         }
 
-        currentPlayer = (currentPlayer == Player::X) ? Player::O : Player::X;
-        ++moves;
-    }
+        game.drawBoard();
 
-    game.drawBoard();
+        std::clock_t endTime = std::clock();
+        double totalTime = (endTime - startTime) / (double)CLOCKS_PER_SEC;
 
-    if (game.isGameOver()) {
-        std::cout << "Player " << (currentPlayer == Player::X ? 'O' : 'X') << " wins!" << std::endl;
-    } else {
-        std::cout << "It's a draw!" << std::endl;
+        if (game.isGameOver()) {
+            std::cout << "Player " << (currentPlayer == Player::X ? playerOName : playerXName) << " wins!" << std::endl;
+        } else {
+            std::cout << "It's a draw!" << std::endl;
+        }
+
+        std::cout << "Total time: " << totalTime << " seconds" << std::endl;
+
+        char playAgainInput;
+        std::cout << "Do you want to play again? (Y/N): ";
+        std::cin >> playAgainInput;
+        playAgain = (playAgainInput == 'Y' || playAgainInput == 'y');
     }
 
     return 0;
