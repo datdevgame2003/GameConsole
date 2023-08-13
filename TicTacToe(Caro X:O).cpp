@@ -80,7 +80,7 @@ int main() {
         std::string playerXName, playerOName;
         Player currentPlayer = Player::X;
         int moves = 0;
-
+        int totalMoves = 0;
         std::cout << "Enter name for Player X: ";
         std::cin >> playerXName;
         std::cout << "Enter name for Player O: ";
@@ -106,6 +106,7 @@ int main() {
 
             currentPlayer = (currentPlayer == Player::X) ? Player::O : Player::X;
             ++moves;
+            ++totalMoves;
         }
 
         game.drawBoard();
@@ -114,11 +115,11 @@ int main() {
         double totalTime = (endTime - startTime) / (double)CLOCKS_PER_SEC;
 
         if (game.isGameOver()) {
-            std::cout << "Player " << (currentPlayer == Player::X ? playerOName : playerXName) << " wins!" << std::endl;
+            std::cout << "Congratulations!Player " << (currentPlayer == Player::X ? playerOName : playerXName) << " is the winner!" << std::endl;
         } else {
             std::cout << "It's a draw!" << std::endl;
         }
-
+         std::cout << "Total moves played: " << totalMoves << std::endl;
         std::cout << "Total time: " << totalTime << " seconds" << std::endl;
 
         char playAgainInput;
