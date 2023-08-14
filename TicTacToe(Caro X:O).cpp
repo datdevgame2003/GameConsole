@@ -26,13 +26,13 @@ public:
         return boardSize;
     }
 
-    void drawBoard() {
+    void drawBoard(char playerXMark, char playerOMark) {
         system("cls");
         for (int i = 0; i < boardSize; ++i) {
             for (int j = 0; j < boardSize; ++j) {
                 char mark = ' ';
-                if (board[i][j] == Player::X) mark = 'X';
-                else if (board[i][j] == Player::O) mark = 'O';
+                if (board[i][j] == Player::X) mark = playerXMark;
+                else if (board[i][j] == Player::O) mark =  playerOMark;
                 std::cout << mark;
                 if (j < boardSize - 1) std::cout << '|';
             }
@@ -74,7 +74,7 @@ public:
 
 int main() {
     bool playAgain = true;
-
+    char playerXMark, playerOMark;
     while (playAgain) {
         CaroGame game;
         std::string playerXName, playerOName;
@@ -86,10 +86,15 @@ int main() {
         std::cout << "Enter name for Player O: ";
         std::cin >> playerOName;
 
+        std::cout << "Choose a character for " << playerXName << ": ";
+        std::cin >> playerXMark;
+        std::cout << "Choose a character for " << playerOName << ": ";
+        std::cin >> playerOMark;
+
         std::clock_t startTime = std::clock();
 
         while (!game.isGameOver() && moves < game.getBoardSize() * game.getBoardSize()) {
-            game.drawBoard();
+            game.drawBoard(playerXMark, playerOMark);
             std::cout << "Player " << (currentPlayer == Player::X ? playerXName : playerOName) << "'s turn." << std::endl;
 
             int row, col;
@@ -109,13 +114,13 @@ int main() {
             ++totalMoves;
         }
 
-        game.drawBoard();
+        game.drawBoard(playerXMark, playerOMark);
 
         std::clock_t endTime = std::clock();
         double totalTime = (endTime - startTime) / (double)CLOCKS_PER_SEC;
 
         if (game.isGameOver()) {
-            std::cout << "Congratulations!Player " << (currentPlayer == Player::X ? playerOName : playerXName) << " is the winner!" << std::endl;
+            std::cout << "Congratulations!Player: " << (currentPlayer == Player::X ? playerOName : playerXName) << " is the winner!" << std::endl;
         } else {
             std::cout << "It's a draw!" << std::endl;
         }
